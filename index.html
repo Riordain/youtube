@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Clone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            height: 56px;
+            background-color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .left-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-icon {
+            padding: 8px;
+            margin-right: 16px;
+            cursor: pointer;
+        }
+        
+        .youtube-logo {
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .middle-section {
+            display: flex;
+            align-items: center;
+            flex: 0.6;
+            max-width: 640px;
+        }
+        
+        .search-bar {
+            flex: 1;
+            height: 36px;
+            padding: 2px 6px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 2px 0 0 2px;
+            box-shadow: inset 0 1px 2px #eee;
+        }
+        
+        .search-button {
+            width: 64px;
+            height: 36px;
+            background-color: #f8f8f8;
+            border: 1px solid #d3d3d3;
+            border-left: none;
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+        }
+        
+        .voice-search {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f9f9f9;
+            margin-left: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .right-section {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 180px;
+        }
+        
+        .upload-icon, .apps-icon, .notifications-icon {
+            padding: 8px;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+        
+        .user-profile {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+        
+        .sidebar {
+            width: 240px;
+            position: fixed;
+            top: 56px;
+            bottom: 0;
+            left: 0;
+            background-color: white;
+            padding: 12px 0;
+            overflow-y: auto;
+        }
+        
+        .sidebar-section {
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 8px 24px;
+            cursor: pointer;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #f2f2f2;
+        }
+        
+        .sidebar-icon {
+            margin-right: 24px;
+            width: 24px;
+            height: 24px;
+        }
+        
+        .sidebar-text {
+            font-size: 14px;
+        }
+        
+        .main-content {
+            margin-left: 240px;
+            padding: 20px;
+        }
+        
+        .categories {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e5e5;
+            position: sticky;
+            top: 56px;
+            background-color: white;
+            z-index: 50;
+        }
+        
+        .category {
+            padding: 6px 12px;
+            margin-right: 12px;
+            background-color: #f2f2f2;
+            border-radius: 16px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .category:hover {
+            background-color: #e5e5e5;
+        }
+        
+        .category.active {
+            background-color: #606060;
+            color: white;
+        }
+        
+        .videos-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            padding: 20px 0;
+        }
+        
+        .video {
+            cursor: pointer;
+        }
+        
+        .thumbnail {
+            position: relative;
+            margin-bottom: 8px;
+        }
+        
+        .thumbnail-image {
+            width: 100%;
+            border-radius: 8px;
+        }
+        
+        .video-time {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 3px 4px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .video-details {
+            display: flex;
+        }
+        
+        .channel-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+        
+        .video-info {
+            flex: 1;
+        }
+        
+        .video-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .channel-name, .video-stats {
+            font-size: 12px;
+            color: #606060;
+        }
+        
+        .channel-name {
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="left-section">
+            <div class="menu-icon">≡</div>
+            <img class="youtube-logo" src="https://www.youtube.com/img/desktop/yt_1200.png" alt="YouTube Logo">
+        </div>
+        <div class="middle-section">
+            <input type="text" class="search-bar" placeholder="Search">
+            <button class="search-button">🔍</button>
+            <div class="voice-search">🎤</div>
+        </div>
+        <div class="right-section">
+            <div class="upload-icon">📤</div>
+            <div class="apps-icon">◫</div>
+            <div class="notifications-icon">🔔</div>
+            <img class="user-profile" src="https://randomuser.me/api/portraits/men/1.jpg" alt="User Profile">
+        </div>
+    </header>
+    
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-link">
+                <div class="sidebar-icon">🏠</div>
+                <div class="sidebar-text">Home</div>
+            </div>
+            <div class="sidebar-link">
+                <div class="sidebar-icon">🔥</div>
+                <div class="sidebar-text">Trending</div>
+            </div>
+            <div class="sidebar-link">
+                <div class="sidebar-icon">🎬</div>
+                <div class="sidebar-text">Subscriptions</div>
+            </div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-link">
+                <div class="sidebar-icon">📼</div>
+                <div class="sidebar-text">Library</div>
+            </div>
+            <div class="sidebar-link">
+                <div class="sidebar-icon">⏱️</div>
+                <div class="sidebar-text">History</div>
+            </div>
+            <div class="sidebar-link">
+                <div class="sidebar-icon">▶️</div>
+                <div class="sidebar-text">Your videos</div>
+            </div>
+            <div class="sidebar-link">
+                <div class="sidebar-icon">👍</div>
+                <div class="sidebar-text">Liked videos</div>
+            </div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-link">
+                <div class="sidebar-text"><strong>SUBSCRIPTIONS</strong></div>
+            </div>
+            <div class="sidebar-link">
+                <div class="sidebar-icon">👨</div>
+                <div class="sidebar-text">Channel 1</div>
+            </div>
+            <div class="sidebar-link">
+                <div class="sidebar-icon">👩</div>
+                <div class="sidebar-text">Channel 2</div>
+            </div>
+            <div class="sidebar-link">
+                <div class="sidebar-icon">🧑</div>
+                <div class="sidebar-text">Channel 3</div>
+            </div>
+        </div>
+    </aside>
+    
+    <main class="main-content">
+        <div class="categories">
+            <div class="category active">All</div>
+            <div class="category">Music</div>
+            <div class="category">Gaming</div>
+            <div class="category">Live</div>
+            <div class="category">Programming</div>
+            <div class="category">Comedy</div>
+            <div class="category">Podcasts</div>
+            <div class="category">Recently uploaded</div>
+            <div class="category">Watched</div>
+        </div>
+        
+        <div class="videos-container">
+            <!-- Video 1 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">10:30</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/men/2.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Amazing Video That Will Blow Your Mind</div>
+                        <div class="channel-name">Awesome Channel</div>
+                        <div class="video-stats">1.2M views • 3 days ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 2 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/9bZkp7q19f0/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">4:20</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/women/3.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Learn This One Simple Trick</div>
+                        <div class="channel-name">Tips & Tricks</div>
+                        <div class="video-stats">543K views • 1 week ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 3 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/J---aiyznGQ/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">2:15</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/men/4.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Funny Cat Compilation 2023</div>
+                        <div class="channel-name">Funny Animals</div>
+                        <div class="video-stats">8.7M views • 2 months ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 4 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/PkZNo7MFNFg/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">35:42</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/women/5.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Complete Beginner's Guide to Programming</div>
+                        <div class="channel-name">Code Masters</div>
+                        <div class="video-stats">1.5M views • 1 year ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 5 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/5qap5aO4i9A/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">11:59:59</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/men/6.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">24/7 Relaxing Music for Studying</div>
+                        <div class="channel-name">Chill Vibes</div>
+                        <div class="video-stats">12M views • Live now</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 6 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/RgKAFK5djSk/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">3:45</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/women/7.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Top 10 Travel Destinations</div>
+                        <div class="channel-name">Travel Guide</div>
+                        <div class="video-stats">2.3M views • 5 months ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 7 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/7wtfhZwyrcc/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">15:22</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/men/8.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">How to Make Perfect Pancakes</div>
+                        <div class="channel-name">Cooking Time</div>
+                        <div class="video-stats">876K views • 3 weeks ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 8 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/OPf0YbXqDm0/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">22:10</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/women/9.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Morning Routine for Productivity</div>
+                        <div class="channel-name">Life Hacks</div>
+                        <div class="video-stats">1.1M views • 2 months ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 9 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/kJQP7kiw5Fk/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">4:13</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/men/10.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Most Popular Song of the Year</div>
+                        <div class="channel-name">Music Hits</div>
+                        <div class="video-stats">450M views • 5 years ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 10 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/9pdj4iJD08s/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">8:45</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/women/11.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">DIY Home Decoration Ideas</div>
+                        <div class="channel-name">Creative Home</div>
+                        <div class="video-stats">756K views • 1 month ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 11 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/6Dh-RL__uN4/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">12:30</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/men/12.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Full Body Workout at Home</div>
+                        <div class="channel-name">Fitness Guru</div>
+                        <div class="video-stats">3.2M views • 6 months ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 12 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/3tmd-ClpJxA/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">18:05</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/women/13.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Learn Spanish in 30 Minutes</div>
+                        <div class="channel-name">Language School</div>
+                        <div class="video-stats">987K views • 4 months ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 13 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/4NRXx6U8ABQ/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">5:55</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/men/14.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Unboxing the Newest Smartphone</div>
+                        <div class="channel-name">Tech Reviews</div>
+                        <div class="video-stats">2.8M views • 1 week ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 14 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/3YxaaGgTQYM/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">9:18</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/women/15.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Easy Hairstyles for Work</div>
+                        <div class="channel-name">Beauty Tips</div>
+                        <div class="video-stats">1.4M views • 3 months ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 15 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/6ZfuNTqbHE8/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">2:28:32</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/men/16.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Full Movie: The Adventure Begins</div>
+                        <div class="channel-name">Movie Channel</div>
+                        <div class="video-stats">45M views • 2 years ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 16 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/2Vv-BfVoq4g/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">6:09</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/women/17.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Budgeting for Beginners</div>
+                        <div class="channel-name">Finance Expert</div>
+                        <div class="video-stats">654K views • 5 months ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 17 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/VRJmcxCrAOA/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">14:22</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/men/18.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Car Maintenance Tips</div>
+                        <div class="channel-name">Auto Guide</div>
+                        <div class="video-stats">1.9M views • 8 months ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 18 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/6PRJU8XQp24/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">7:41</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/women/19.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Quick and Healthy Breakfast Ideas</div>
+                        <div class="channel-name">Healthy Eating</div>
+                        <div class="video-stats">2.1M views • 1 year ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 19 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/3JWTaaS7LdU/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">11:11</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/men/20.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Photography Tips for Beginners</div>
+                        <div class="channel-name">Photo Masters</div>
+                        <div class="video-stats">1.7M views • 4 months ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 20 -->
+            <div class="video">
+                <div class="thumbnail">
+                    <img class="thumbnail-image" src="https://i.ytimg.com/vi/8UVNT4wvIGY/hqdefault.jpg" alt="Video Thumbnail">
+                    <span class="video-time">25:45</span>
+                </div>
+                <div class="video-details">
+                    <img class="channel-icon" src="https://randomuser.me/api/portraits/women/21.jpg" alt="Channel Icon">
+                    <div class="video-info">
+                        <div class="video-title">Complete Guide to Gardening</div>
+                        <div class="channel-name">Green Thumb</div>
+                        <div class="video-stats">876K views • 7 months ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
