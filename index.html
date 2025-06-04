@@ -772,41 +772,6 @@ function closeVideo() {
     // Hide player
     playerContainer.style.display = 'none';
     document.body.style.overflow = 'auto';
-}
-</script>
-
-<!--     <script>
-        // Video player functionality
-        function playVideo(videoId, title, channel, stats) {
-            const playerContainer = document.getElementById('videoPlayerContainer');
-            const videoPlayer = document.getElementById('videoPlayer');
-            const videoTitle = document.getElementById('videoPlayerTitle');
-            const videoStats = document.getElementById('videoPlayerStats');
-            
-            // Set video source (using YouTube embed for demo)
-            videoPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-            
-            // Set video info
-            videoTitle.textContent = title;
-            videoStats.textContent = `${channel} • ${stats}`;
-            
-            // Show player
-            playerContainer.style.display = 'flex';
-            
-            // Prevent scrolling when video is open
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function closeVideo() {
-            const playerContainer = document.getElementById('videoPlayerContainer');
-            const videoPlayer = document.getElementById('videoPlayer');
-            
-            // Pause video
-            videoPlayer.pause();
-            videoPlayer.src = '';
-            
-            // Hide player
-            playerContainer.style.display = 'none';
             
             // Restore scrolling
             document.body.style.overflow = 'auto';
@@ -879,6 +844,6 @@ function closeVideo() {
                 // In a real app, you would filter videos by category here
             });
         });
-    </script> -->
+    </script>
 </body>
 </html>
