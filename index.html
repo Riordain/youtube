@@ -37,10 +37,11 @@
             padding: 8px;
             margin-right: 16px;
             cursor: pointer;
+            font-size: 20px;
         }
         
         .youtube-logo {
-            height: 20px;
+            height: 30px;
             cursor: pointer;
         }
         
@@ -94,6 +95,7 @@
             padding: 8px;
             margin-right: 8px;
             cursor: pointer;
+            font-size: 18px;
         }
         
         .user-profile {
@@ -154,6 +156,7 @@
             top: 56px;
             background-color: white;
             z-index: 50;
+            overflow-x: auto;
         }
         
         .category {
@@ -241,28 +244,97 @@
         .channel-name {
             margin-bottom: 2px;
         }
+        
+        /* Video Player Styles */
+        .video-player-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .video-player {
+            width: 80%;
+            max-width: 1200px;
+            position: relative;
+        }
+        
+        .video-player video {
+            width: 100%;
+            outline: none;
+        }
+        
+        .close-player {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+        
+        .video-info-panel {
+            color: white;
+            margin-top: 15px;
+        }
+        
+        .video-player-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .video-player-stats {
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            .sidebar-text, .sidebar-section > div:first-child {
+                display: none;
+            }
+            .sidebar-icon {
+                margin-right: 0;
+            }
+            .main-content {
+                margin-left: 70px;
+            }
+            .video-player {
+                width: 95%;
+            }
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="left-section">
-            <div class="menu-icon">≡</div>
-            <img class="youtube-logo" src="https://www.youtube.com/img/desktop/yt_1200.png" alt="YouTube Logo">
+            <div class="menu-icon" id="menuToggle">≡</div>
+            <img class="youtube-logo" src="https://www.youtube.com/img/desktop/yt_1200.png" alt="YouTube Logo" id="youtubeLogo">
         </div>
         <div class="middle-section">
-            <input type="text" class="search-bar" placeholder="Search">
-            <button class="search-button">🔍</button>
-            <div class="voice-search">🎤</div>
+            <input type="text" class="search-bar" placeholder="Search" id="searchInput">
+            <button class="search-button" id="searchButton">🔍</button>
+            <div class="voice-search" id="voiceSearch">🎤</div>
         </div>
         <div class="right-section">
-            <div class="upload-icon">📤</div>
-            <div class="apps-icon">◫</div>
-            <div class="notifications-icon">🔔</div>
-            <img class="user-profile" src="https://randomuser.me/api/portraits/men/1.jpg" alt="User Profile">
+            <div class="upload-icon" id="uploadButton">📤</div>
+            <div class="apps-icon" id="appsButton">◫</div>
+            <div class="notifications-icon" id="notificationsButton">🔔</div>
+            <img class="user-profile" src="https://randomuser.me/api/portraits/men/1.jpg" alt="User Profile" id="userProfile">
         </div>
     </header>
     
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-section">
             <div class="sidebar-link">
                 <div class="sidebar-icon">🏠</div>
@@ -314,7 +386,7 @@
         </div>
     </aside>
     
-    <main class="main-content">
+    <main class="main-content" id="mainContent">
         <div class="categories">
             <div class="category active">All</div>
             <div class="category">Music</div>
@@ -329,7 +401,7 @@
         
         <div class="videos-container">
             <!-- Video 1 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('dQw4w9WgXcQ', 'Amazing Video That Will Blow Your Mind', 'Awesome Channel', '1.2M views • 3 days ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">10:30</span>
@@ -345,7 +417,7 @@
             </div>
             
             <!-- Video 2 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('9bZkp7q19f0', 'Learn This One Simple Trick', 'Tips & Tricks', '543K views • 1 week ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/9bZkp7q19f0/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">4:20</span>
@@ -361,7 +433,7 @@
             </div>
             
             <!-- Video 3 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('J---aiyznGQ', 'Funny Cat Compilation 2023', 'Funny Animals', '8.7M views • 2 months ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/J---aiyznGQ/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">2:15</span>
@@ -377,7 +449,7 @@
             </div>
             
             <!-- Video 4 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('PkZNo7MFNFg', 'Complete Beginner\'s Guide to Programming', 'Code Masters', '1.5M views • 1 year ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/PkZNo7MFNFg/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">35:42</span>
@@ -393,7 +465,7 @@
             </div>
             
             <!-- Video 5 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('5qap5aO4i9A', '24/7 Relaxing Music for Studying', 'Chill Vibes', '12M views • Live now')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/5qap5aO4i9A/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">11:59:59</span>
@@ -409,7 +481,7 @@
             </div>
             
             <!-- Video 6 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('RgKAFK5djSk', 'Top 10 Travel Destinations', 'Travel Guide', '2.3M views • 5 months ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/RgKAFK5djSk/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">3:45</span>
@@ -425,7 +497,7 @@
             </div>
             
             <!-- Video 7 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('7wtfhZwyrcc', 'How to Make Perfect Pancakes', 'Cooking Time', '876K views • 3 weeks ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/7wtfhZwyrcc/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">15:22</span>
@@ -441,7 +513,7 @@
             </div>
             
             <!-- Video 8 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('OPf0YbXqDm0', 'Morning Routine for Productivity', 'Life Hacks', '1.1M views • 2 months ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/OPf0YbXqDm0/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">22:10</span>
@@ -457,7 +529,7 @@
             </div>
             
             <!-- Video 9 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('kJQP7kiw5Fk', 'Most Popular Song of the Year', 'Music Hits', '450M views • 5 years ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/kJQP7kiw5Fk/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">4:13</span>
@@ -473,7 +545,7 @@
             </div>
             
             <!-- Video 10 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('9pdj4iJD08s', 'DIY Home Decoration Ideas', 'Creative Home', '756K views • 1 month ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/9pdj4iJD08s/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">8:45</span>
@@ -489,7 +561,7 @@
             </div>
             
             <!-- Video 11 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('6Dh-RL__uN4', 'Full Body Workout at Home', 'Fitness Guru', '3.2M views • 6 months ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/6Dh-RL__uN4/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">12:30</span>
@@ -505,7 +577,7 @@
             </div>
             
             <!-- Video 12 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('3tmd-ClpJxA', 'Learn Spanish in 30 Minutes', 'Language School', '987K views • 4 months ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/3tmd-ClpJxA/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">18:05</span>
@@ -521,7 +593,7 @@
             </div>
             
             <!-- Video 13 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('4NRXx6U8ABQ', 'Unboxing the Newest Smartphone', 'Tech Reviews', '2.8M views • 1 week ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/4NRXx6U8ABQ/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">5:55</span>
@@ -537,7 +609,7 @@
             </div>
             
             <!-- Video 14 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('3YxaaGgTQYM', 'Easy Hairstyles for Work', 'Beauty Tips', '1.4M views • 3 months ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/3YxaaGgTQYM/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">9:18</span>
@@ -553,7 +625,7 @@
             </div>
             
             <!-- Video 15 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('6ZfuNTqbHE8', 'Full Movie: The Adventure Begins', 'Movie Channel', '45M views • 2 years ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/6ZfuNTqbHE8/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">2:28:32</span>
@@ -569,7 +641,7 @@
             </div>
             
             <!-- Video 16 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('2Vv-BfVoq4g', 'Budgeting for Beginners', 'Finance Expert', '654K views • 5 months ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/2Vv-BfVoq4g/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">6:09</span>
@@ -585,7 +657,7 @@
             </div>
             
             <!-- Video 17 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('VRJmcxCrAOA', 'Car Maintenance Tips', 'Auto Guide', '1.9M views • 8 months ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/VRJmcxCrAOA/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">14:22</span>
@@ -601,7 +673,7 @@
             </div>
             
             <!-- Video 18 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('6PRJU8XQp24', 'Quick and Healthy Breakfast Ideas', 'Healthy Eating', '2.1M views • 1 year ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/6PRJU8XQp24/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">7:41</span>
@@ -617,7 +689,7 @@
             </div>
             
             <!-- Video 19 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('3JWTaaS7LdU', 'Photography Tips for Beginners', 'Photo Masters', '1.7M views • 4 months ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/3JWTaaS7LdU/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">11:11</span>
@@ -633,7 +705,7 @@
             </div>
             
             <!-- Video 20 -->
-            <div class="video">
+            <div class="video" onclick="playVideo('8UVNT4wvIGY', 'Complete Guide to Gardening', 'Green Thumb', '876K views • 7 months ago')">
                 <div class="thumbnail">
                     <img class="thumbnail-image" src="https://i.ytimg.com/vi/8UVNT4wvIGY/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-time">25:45</span>
@@ -649,5 +721,125 @@
             </div>
         </div>
     </main>
+
+    <!-- Video Player -->
+    <div class="video-player-container" id="videoPlayerContainer">
+        <div class="video-player">
+            <div class="close-player" onclick="closeVideo()">×</div>
+            <video controls id="videoPlayer">
+                Your browser does not support the video tag.
+            </video>
+            <div class="video-info-panel">
+                <h2 class="video-player-title" id="videoPlayerTitle"></h2>
+                <div class="video-player-stats" id="videoPlayerStats"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Video player functionality
+        function playVideo(videoId, title, channel, stats) {
+            const playerContainer = document.getElementById('videoPlayerContainer');
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoTitle = document.getElementById('videoPlayerTitle');
+            const videoStats = document.getElementById('videoPlayerStats');
+            
+            // Set video source (using YouTube embed for demo)
+            videoPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            
+            // Set video info
+            videoTitle.textContent = title;
+            videoStats.textContent = `${channel} • ${stats}`;
+            
+            // Show player
+            playerContainer.style.display = 'flex';
+            
+            // Prevent scrolling when video is open
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeVideo() {
+            const playerContainer = document.getElementById('videoPlayerContainer');
+            const videoPlayer = document.getElementById('videoPlayer');
+            
+            // Pause video
+            videoPlayer.pause();
+            videoPlayer.src = '';
+            
+            // Hide player
+            playerContainer.style.display = 'none';
+            
+            // Restore scrolling
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close video when clicking outside
+        document.getElementById('videoPlayerContainer').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeVideo();
+            }
+        });
+        
+        // Menu toggle functionality
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            if (sidebar.style.width === '70px') {
+                sidebar.style.width = '240px';
+                mainContent.style.marginLeft = '240px';
+            } else {
+                sidebar.style.width = '70px';
+                mainContent.style.marginLeft = '70px';
+            }
+        });
+        
+        // Search functionality
+        document.getElementById('searchButton').addEventListener('click', function() {
+            const searchTerm = document.getElementById('searchInput').value;
+            if (searchTerm.trim() !== '') {
+                alert(`Searching for: ${searchTerm}`);
+                // In a real app, you would filter videos or make an API call here
+            }
+        });
+        
+        // Press Enter to search
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('searchButton').click();
+            }
+        });
+        
+        // Other button functionalities
+        document.getElementById('voiceSearch').addEventListener('click', function() {
+            alert('Voice search activated (mock)');
+        });
+        
+        document.getElementById('uploadButton').addEventListener('click', function() {
+            alert('Upload button clicked (mock)');
+        });
+        
+        document.getElementById('appsButton').addEventListener('click', function() {
+            alert('Apps button clicked (mock)');
+        });
+        
+        document.getElementById('notificationsButton').addEventListener('click', function() {
+            alert('Notifications button clicked (mock)');
+        });
+        
+        document.getElementById('userProfile').addEventListener('click', function() {
+            alert('User profile clicked (mock)');
+        });
+        
+        // Category selection
+        const categories = document.querySelectorAll('.category');
+        categories.forEach(category => {
+            category.addEventListener('click', function() {
+                categories.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                // In a real app, you would filter videos by category here
+            });
+        });
+    </script>
 </body>
 </html>
