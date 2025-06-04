@@ -723,20 +723,59 @@
     </main>
 
     <!-- Video Player -->
-    <div class="video-player-container" id="videoPlayerContainer">
-        <div class="video-player">
-            <div class="close-player" onclick="closeVideo()">×</div>
-            <video controls id="videoPlayer">
-                Your browser does not support the video tag.
-            </video>
-            <div class="video-info-panel">
-                <h2 class="video-player-title" id="videoPlayerTitle"></h2>
-                <div class="video-player-stats" id="videoPlayerStats"></div>
-            </div>
+    <!-- Replace the existing video player container with this: -->
+<div class="video-player-container" id="videoPlayerContainer">
+    <div class="video-player">
+        <div class="close-player" onclick="closeVideo()">×</div>
+        <iframe 
+            id="videoPlayer"
+            width="100%" 
+            height="500"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
+        <div class="video-info-panel">
+            <h2 class="video-player-title" id="videoPlayerTitle"></h2>
+            <div class="video-player-stats" id="videoPlayerStats"></div>
         </div>
     </div>
+</div>
 
-    <script>
+<!-- And update the playVideo function in JavaScript to: -->
+<script>
+function playVideo(videoId, title, channel, stats) {
+    const playerContainer = document.getElementById('videoPlayerContainer');
+    const videoPlayer = document.getElementById('videoPlayer');
+    const videoTitle = document.getElementById('videoPlayerTitle');
+    const videoStats = document.getElementById('videoPlayerStats');
+    
+    // Set YouTube embed URL
+    videoPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    
+    // Set video info
+    videoTitle.textContent = title;
+    videoStats.textContent = `${channel} • ${stats}`;
+    
+    // Show player
+    playerContainer.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeVideo() {
+    const playerContainer = document.getElementById('videoPlayerContainer');
+    const videoPlayer = document.getElementById('videoPlayer');
+    
+    // Remove the iframe src to stop playback
+    videoPlayer.src = '';
+    
+    // Hide player
+    playerContainer.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+</script>
+
+<!--     <script>
         // Video player functionality
         function playVideo(videoId, title, channel, stats) {
             const playerContainer = document.getElementById('videoPlayerContainer');
@@ -840,6 +879,6 @@
                 // In a real app, you would filter videos by category here
             });
         });
-    </script>
+    </script> -->
 </body>
 </html>
