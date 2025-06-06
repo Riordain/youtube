@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Clone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+        }
+        
+        body.dark-mode {
+            background-color: #181818;
+            color: #ffffff;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            height: 56px;
+            background-color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        body.dark-mode header {
+            background-color: #202020;
+            border-bottom: 1px solid #303030;
+        }
+        
+        .left-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-icon {
+            padding: 8px;
+            margin-right: 16px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        
+        body.dark-mode .menu-icon {
+            color: white;
+        }
+        
+        .youtube-logo {
+            height: 30px;
+            cursor: pointer;
+        }
+        
+        .middle-section {
+            display: flex;
+            align-items: center;
+            flex: 0.6;
+            max-width: 640px;
+        }
+        
+        .search-bar {
+            flex: 1;
+            height: 36px;
+            padding: 2px 6px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 2px 0 0 2px;
+            box-shadow: inset 0 1px 2px #eee;
+            background-color: white;
+        }
+        
+        body.dark-mode .search-bar {
+            background-color: #121212;
+            border-color: #303030;
+            color: white;
+        }
+        
+        .search-button {
+            width: 64px;
+            height: 36px;
+            background-color: #f8f8f8;
+            border: 1px solid #d3d3d3;
+            border-left: none;
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+        }
+        
+        body.dark-mode .search-button {
+            background-color: #323232;
+            border-color: #303030;
+            color: white;
+        }
+        
+        .voice-search {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f9f9f9;
+            margin-left: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        body.dark-mode .voice-search {
+            background-color: #181818;
+            color: white;
+        }
+        
+        .right-section {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 180px;
+        }
+        
+        .upload-icon, .apps-icon, .notifications-icon, .theme-toggle {
+            padding: 8px;
+            margin-right: 8px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        body.dark-mode .upload-icon,
+        body.dark-mode .apps-icon,
+        body.dark-mode .notifications-icon,
+        body.dark-mode .theme-toggle {
+            color: white;
+        }
+        
+        .user-profile {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+        
+        .sidebar {
+            width: 240px;
+            position: fixed;
+            top: 56px;
+            bottom: 0;
+            left: 0;
+            background-color: white;
+            padding: 12px 0;
+            overflow-y: auto;
+        }
+        
+        body.dark-mode .sidebar {
+            background-color: #202020;
+            color: white;
+        }
+        
+        .sidebar-section {
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        body.dark-mode .sidebar-section {
+            border-bottom-color: #303030;
+        }
+        
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 8px 24px;
+            cursor: pointer;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #f2f2f2;
+        }
+        
+        body.dark-mode .sidebar-link:hover {
+            background-color: #383838;
+        }
+        
+        .sidebar-icon {
+            margin-right: 24px;
+            width: 24px;
+            height: 24px;
+        }
+        
+        .sidebar-text {
+            font-size: 14px;
+        }
+        
+        .main-content {
+            margin-left: 240px;
+            padding: 20px;
+        }
+        
+        .categories {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e5e5;
+            position: sticky;
+            top: 56px;
+            background-color: white;
+            z-index: 50;
+            overflow-x: auto;
+        }
+        
+        body.dark-mode .categories {
+            background-color: #202020;
+            border-bottom-color: #303030;
+        }
+        
+        .category {
+            padding: 6px 12px;
+            margin-right: 12px;
+            background-color: #f2f2f2;
+            border-radius: 16px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        body.dark-mode .category {
+            background-color: #383838;
+            color: white;
+        }
+        
+        .category:hover {
+            background-color: #e5e5e5;
+        }
+        
+        body.dark-mode .category:hover {
+            background-color: #484848;
+        }
+        
+        .category.active {
+            background-color: #606060;
+            color: white;
+        }
+        
+        .videos-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            padding: 20px 0;
+        }
+        
+        .video {
+            cursor: pointer;
+        }
+        
+        .thumbnail {
+            position: relative;
+            margin-bottom: 8px;
+        }
+        
+        .thumbnail-image {
+            width: 100%;
+            border-radius: 8px;
+        }
+        
+        .video-time {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 3px 4px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .video-details {
+            display: flex;
+        }
+        
+        .channel-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+        
+        .video-info {
+            flex: 1;
+        }
+        
+        .video-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            color: black;
+        }
+        
+        body.dark-mode .video-title {
+            color: white;
+        }
+        
+        .channel-name, .video-stats {
+            font-size: 12px;
+            color: #606060;
+        }
+        
+        body.dark-mode .channel-name,
+        body.dark-mode .video-stats {
+            color: #aaaaaa;
+        }
+        
+        /* Video Player Styles */
+        .video-player-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .video-player {
+            width: 80%;
+            max-width: 1200px;
+            position: relative;
+        }
+        
+        .video-player iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 8px;
+        }
+        
+        .close-player {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+        
+        .video-info-panel {
+            color: white;
+            margin-top: 15px;
+        }
+        
+        .video-player-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .video-player-stats {
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            .sidebar-text, .sidebar-section > div:first-child {
+                display: none;
+            }
+            .sidebar-icon {
+                margin-right: 0;
+            }
+            .main-content {
+                margin-left: 70px;
+            }
+            .video-player {
+                width: 95%;
+            }
+            .video-player iframe {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="left-section">
+            <div class="menu-icon" id="menuToggle">≡</div>
+            <img class="youtube-logo" src="https://www.youtube.com/img/desktop/yt_1200.png" alt="YouTube Logo" id="youtubeLogo">
+        </div>
+        <div class="middle-section">
+            <input type="text" class="search-bar" placeholder="Search" id="searchInput">
+            <button class="search-button" id="searchButton">🔍</button>
+            <div class="voice-search" id="voiceSearch">🎤</div>
+        </div>
+        <div class="right-section">
+            <div class="theme-toggle" id="themeToggle">🌓</div>
+            <div class="upload-icon" id="uploadButton">📤</div>
+            <div class="apps-icon" id="appsButton">◫</div>
+            <div class="notifications-icon" id="notificationsButton">🔔</div>
+            <img class="user-profile" src="https://randomuser.me/api/portraits/men/1.jpg" alt="User Profile" id="userProfile">
+        </div>
+    </header>
+    
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-link">
+                <div class="sidebar-icon">🏠</div>
+                <div class="sidebar-text">Home</div>
+            </div>
+            <div class="sidebar-link">
+                <div class="sidebar-icon">🔥</div>
+                <div class="sidebar-text">Trending</div>
+            </div>
+            <div class="sidebar-link">
+                <div class="sidebar-icon">🎬</div>
+                <div class="sidebar-text">Subscriptions</div>
+            </div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-link">
+                <div class="sidebar-icon">📼</div>
+                <div class="sidebar-text">Library</div>
+            </div>
+            <div class="sidebar-link">
+                <div class="sidebar-icon">⏱️</div>
+                <div class="sidebar-text">History</div>
+            </div>
+            <div class="sidebar-link">
+                <div class="sidebar-icon">▶️</div>
+                <div class="sidebar-text">Your videos</div>
+            </div>
+            <div class="sidebar-link">
+                <div class="sidebar-icon">👍</div>
+                <div class="sidebar-text">Liked videos</div>
+            </div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-link">
+                <div class="sidebar-text"><strong>SUBSCRIPTIONS</strong></div>
+            </div>
+            <div class="sidebar-link">
+                <div class="sidebar-icon">👨</div>
+                <div class="sidebar-text">Channel 1</div>
+            </div>
+            <div class="sidebar-link">
+                <div class="sidebar-icon">👩</div>
+                <div class="sidebar-text">Channel 2</div>
+            </div>
+            <div class="sidebar-link">
+                <div class="sidebar-icon">🧑</div>
+                <div class="sidebar-text">Channel 3</div>
+            </div>
+        </div>
+    </aside>
+    
+    <main class="main-content" id="mainContent">
+        <div class="categories">
+            <div class="category active" data-category="all">All</div>
+            <div class="category" data-category="music">Music</div>
+            <div class="category" data-category="gaming">Gaming</div>
+            <div class="category" data-category="live">Live</div>
+            <div class="category" data-category="programming">Programming</div>
+            <div class="category" data-category="comedy">Comedy</div>
+            <div class="category" data-category="podcasts">Podcasts</div>
+            <div class="category" data-category="recent">Recently uploaded</div>
+            <div class="category" data-category="watched">Watched</div>
+        </div>
+        
+        <div class="videos-container" id="videosContainer">
+            <!-- Videos will be loaded here -->
+        </div>
+    </main>
+
+    <!-- Video Player -->
+    <div class="video-player-container" id="videoPlayerContainer">
+        <div class="video-player">
+            <div class="close-player" onclick="closeVideo()">×</div>
+            <iframe id="videoPlayer" allowfullscreen></iframe>
+            <div class="video-info-panel">
+                <h2 class="video-player-title" id="videoPlayerTitle"></h2>
+                <div class="video-player-stats" id="videoPlayerStats"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Video data
+        const videos = [
+            { id: 'dQw4w9WgXcQ', title: 'Amazing Video That Will Blow Your Mind', channel: 'Awesome Channel', views: '1.2M views • 3 days ago', time: '10:30', category: 'music', thumbnail: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/men/2.jpg' },
+            { id: '9bZkp7q19f0', title: 'Learn This One Simple Trick', channel: 'Tips & Tricks', views: '543K views • 1 week ago', time: '4:20', category: 'comedy', thumbnail: 'https://i.ytimg.com/vi/9bZkp7q19f0/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/women/3.jpg' },
+            { id: 'J---aiyznGQ', title: 'Funny Cat Compilation 2023', channel: 'Funny Animals', views: '8.7M views • 2 months ago', time: '2:15', category: 'comedy', thumbnail: 'https://i.ytimg.com/vi/J---aiyznGQ/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/men/4.jpg' },
+            { id: 'PkZNo7MFNFg', title: 'Complete Beginner\'s Guide to Programming', channel: 'Code Masters', views: '1.5M views • 1 year ago', time: '35:42', category: 'programming', thumbnail: 'https://i.ytimg.com/vi/PkZNo7MFNFg/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/women/5.jpg' },
+            { id: '5qap5aO4i9A', title: '24/7 Relaxing Music for Studying', channel: 'Chill Vibes', views: '12M views • Live now', time: '11:59:59', category: 'music', thumbnail: 'https://i.ytimg.com/vi/5qap5aO4i9A/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/men/6.jpg' },
+            { id: 'RgKAFK5djSk', title: 'Top 10 Travel Destinations', channel: 'Travel Guide', views: '2.3M views • 5 months ago', time: '3:45', category: 'recent', thumbnail: 'https://i.ytimg.com/vi/RgKAFK5djSk/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/women/7.jpg' },
+            { id: '7wtfhZwyrcc', title: 'How to Make Perfect Pancakes', channel: 'Cooking Time', views: '876K views • 3 weeks ago', time: '15:22', category: 'watched', thumbnail: 'https://i.ytimg.com/vi/7wtfhZwyrcc/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/men/8.jpg' },
+            { id: 'OPf0YbXqDm0', title: 'Morning Routine for Productivity', channel: 'Life Hacks', views: '1.1M views • 2 months ago', time: '22:10', category: 'watched', thumbnail: 'https://i.ytimg.com/vi/OPf0YbXqDm0/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/women/9.jpg' },
+            { id: 'kJQP7kiw5Fk', title: 'Most Popular Song of the Year', channel: 'Music Hits', views: '450M views • 5 years ago', time: '4:13', category: 'music', thumbnail: 'https://i.ytimg.com/vi/kJQP7kiw5Fk/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/men/10.jpg' },
+            { id: '9pdj4iJD08s', title: 'DIY Home Decoration Ideas', channel: 'Creative Home', views: '756K views • 1 month ago', time: '8:45', category: 'recent', thumbnail: 'https://i.ytimg.com/vi/9pdj4iJD08s/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/women/11.jpg' },
+            { id: '6Dh-RL__uN4', title: 'Full Body Workout at Home', channel: 'Fitness Guru', views: '3.2M views • 6 months ago', time: '12:30', category: 'watched', thumbnail: 'https://i.ytimg.com/vi/6Dh-RL__uN4/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/men/12.jpg' },
+            { id: '3tmd-ClpJxA', title: 'Learn Spanish in 30 Minutes', channel: 'Language School', views: '987K views • 4 months ago', time: '18:05', category: 'recent', thumbnail: 'https://i.ytimg.com/vi/3tmd-ClpJxA/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/women/13.jpg' },
+            { id: '4NRXx6U8ABQ', title: 'Unboxing the Newest Smartphone', channel: 'Tech Reviews', views: '2.8M views • 1 week ago', time: '5:55', category: 'watched', thumbnail: 'https://i.ytimg.com/vi/4NRXx6U8ABQ/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/men/14.jpg' },
+            { id: '3YxaaGgTQYM', title: 'Easy Hairstyles for Work', channel: 'Beauty Tips', views: '1.4M views • 3 months ago', time: '9:18', category: 'recent', thumbnail: 'https://i.ytimg.com/vi/3YxaaGgTQYM/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/women/15.jpg' },
+            { id: '6ZfuNTqbHE8', title: 'Full Movie: The Adventure Begins', channel: 'Movie Channel', views: '45M views • 2 years ago', time: '2:28:32', category: 'watched', thumbnail: 'https://i.ytimg.com/vi/6ZfuNTqbHE8/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/men/16.jpg' },
+            { id: '2Vv-BfVoq4g', title: 'Budgeting for Beginners', channel: 'Finance Expert', views: '654K views • 5 months ago', time: '6:09', category: 'watched', thumbnail: 'https://i.ytimg.com/vi/2Vv-BfVoq4g/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/women/17.jpg' },
+            { id: 'VRJmcxCrAOA', title: 'Car Maintenance Tips', channel: 'Auto Guide', views: '1.9M views • 8 months ago', time: '14:22', category: 'watched', thumbnail: 'https://i.ytimg.com/vi/VRJmcxCrAOA/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/men/18.jpg' },
+            { id: '6PRJU8XQp24', title: 'Quick and Healthy Breakfast Ideas', channel: 'Healthy Eating', views: '2.1M views • 1 year ago', time: '7:41', category: 'recent', thumbnail: 'https://i.ytimg.com/vi/6PRJU8XQp24/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/women/19.jpg' },
+            { id: '3JWTaaS7LdU', title: 'Photography Tips for Beginners', channel: 'Photo Masters', views: '1.7M views • 4 months ago', time: '11:11', category: 'watched', thumbnail: 'https://i.ytimg.com/vi/3JWTaaS7LdU/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/men/20.jpg' },
+            { id: '8UVNT4wvIGY', title: 'Complete Guide to Gardening', channel: 'Green Thumb', views: '876K views • 7 months ago', time: '25:45', category: 'recent', thumbnail: 'https://i.ytimg.com/vi/8UVNT4wvIGY/hqdefault.jpg', channelIcon: 'https://randomuser.me/api/portraits/women/21.jpg' }
+        ];
+
+        // DOM elements
+        const videosContainer = document.getElementById('videosContainer');
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const categories = document.querySelectorAll('.category');
+        const themeToggle = document.getElementById('themeToggle');
+
+        // Initialize the page
+        function init() {
+            renderVideos(videos);
+            setupEventListeners();
+        }
+
+        // Render videos to the page
+        function renderVideos(videosToRender) {
+            videosContainer.innerHTML = '';
+            
+            videosToRender.forEach(video => {
+                const videoElement = document.createElement('div');
+                videoElement.className = 'video';
+                videoElement.innerHTML = `
+                    <div class="thumbnail">
+                        <img class="thumbnail-image" src="${video.thumbnail}" alt="Video Thumbnail">
+                        <span class="video-time">${video.time}</span>
+                    </div>
+                    <div class="video-details">
+                        <img class="channel-icon" src="${video.channelIcon}" alt="Channel Icon">
+                        <div class="video-info">
+                            <div class="video-title">${video.title}</div>
+                            <div class="channel-name">${video.channel}</div>
+                            <div class="video-stats">${video.views}</div>
+                        </div>
+                    </div>
+                `;
+                videoElement.addEventListener('click', () => playVideo(video.id, video.title, video.channel, video.views));
+                videosContainer.appendChild(videoElement);
+            });
+        }
+
+        // Filter videos by category
+        function filterVideosByCategory(category) {
+            if (category === 'all') {
+                renderVideos(videos);
+                return;
+            }
+            
+            const filteredVideos = videos.filter(video => video.category === category);
+            renderVideos(filteredVideos);
+        }
+
+        // Search videos
+        function searchVideos() {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            if (searchTerm.trim() === '') {
+                renderVideos(videos);
+                return;
+            }
+            
+            const filteredVideos = videos.filter(video => 
+                video.title.toLowerCase().includes(searchTerm) || 
+                video.channel.toLowerCase().includes(searchTerm)
+            );
+            
+            renderVideos(filteredVideos);
+        }
+
+        // Play video
+        function playVideo(videoId, title, channel, stats) {
+            const playerContainer = document.getElementById('videoPlayerContainer');
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoTitle = document.getElementById('videoPlayerTitle');
+            const videoStats = document.getElementById('videoPlayerStats');
+            
+            videoPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            videoTitle.textContent = title;
+            videoStats.textContent = `${channel} • ${stats}`;
+            
+            playerContainer.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close video player
+        function closeVideo() {
+            const playerContainer = document.getElementById('videoPlayerContainer');
+            const videoPlayer = document.getElementById('videoPlayer');
+            
+            videoPlayer.src = '';
+            playerContainer.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Toggle dark/light mode
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search functionality
+            searchButton.addEventListener('click', searchVideos);
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchVideos();
+            });
+
+            // Category filtering
+            categories.forEach(category => {
+                category.addEventListener('click', () => {
+                    categories.forEach(c => c.classList.remove('active'));
+                    category.classList.add('active');
+                    filterVideosByCategory(category.dataset.category);
+                });
+            });
+
+            // Theme toggle
+            themeToggle.addEventListener('click', toggleTheme);
+
+            // Check for saved theme preference
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+            }
+
+            // Close video when clicking outside
+            document.getElementById('videoPlayerContainer').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeVideo();
+                }
+            });
+
+            // Menu toggle functionality
+            document.getElementById('menuToggle').addEventListener('click', function() {
+                const sidebar = document.getElementById('sidebar');
+                const mainContent = document.getElementById('mainContent');
+                
+                if (sidebar.style.width === '70px') {
+                    sidebar.style.width = '240px';
+                    mainContent.style.marginLeft = '240px';
+                } else {
+                    sidebar.style.width = '70px';
+                    mainContent.style.marginLeft = '70px';
+                }
+            });
+
+            // Other button functionalities (mock)
+            document.getElementById('voiceSearch').addEventListener('click', () => alert('Voice search activated (mock)'));
+            document.getElementById('uploadButton').addEventListener('click', () => alert('Upload button clicked (mock)'));
+            document.getElementById('appsButton').addEventListener('click', () => alert('Apps button clicked (mock)'));
+            document.getElementById('notificationsButton').addEventListener('click', () => alert('Notifications button clicked (mock)'));
+            document.getElementById('userProfile').addEventListener('click', () => alert('User profile clicked (mock)'));
+        }
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
